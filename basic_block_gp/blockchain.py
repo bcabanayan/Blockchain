@@ -8,11 +8,13 @@ from flask import Flask, jsonify, request
 
 class Blockchain(object):
     def __init__(self):
+        # Chain is the list of blocks
         self.chain = []
+        # Pending transactions, to be added to a block
         self.current_transactions = []
         self.nodes = set()
 
-        self.new_block(previous_hash=1, proof=100)
+        self.new_block(previous_hash=1, proof=99)
 
     def new_block(self, proof, previous_hash=None):
         """
@@ -32,6 +34,7 @@ class Blockchain(object):
         }
 
         # Reset the current list of transactions
+        # Everything in the list got added to a block
         self.current_transactions = []
 
         self.chain.append(block)
@@ -177,6 +180,8 @@ def new_transaction():
 def full_chain():
     response = {
         # TODO: Return the chain and its current length
+        'currentChain': blockchain.chain,
+        'length': len(blockchain.chain)
     }
     return jsonify(response), 200
 
