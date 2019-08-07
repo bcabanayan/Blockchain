@@ -87,7 +87,7 @@ class Blockchain(object):
         # for block 1, hash(1, p) = 000000x
         # find value for proof that, when hashed with last block string, generates value with 6 leading 0s
         # guess and check until you find the answer you need
-        while not valid_proof(last_proof, proof):
+        while self.valid_proof(last_proof, proof) is False:
             proof+= 1
 
         return proof
@@ -152,16 +152,16 @@ blockchain = Blockchain()
 @app.route('/mine', methods=['GET'])
 def mine():
     # We run the proof of work algorithm to get the next proof...
-    proof = blockchain.proof_of_work()
+    proof = blockchain.proof_of_work(blockchain.last_block)
 
     # We must receive a reward for finding the proof.
     # TODO:
     # The sender is "0" to signify that this node has mine a new coin
     # The recipient is the current node, it did the mining!
     # The amount is 1 coin as a reward for mining the next block
-
+    blockchain.new_transaction(0, node_identifier, 1)
     # Forge the new Block by adding it to the chain
-    # TODO
+    block = blockchain.new_block(proof, blockchain.hash(blockchain.last_block))
 
     # Send a response with the new block
     response = {
