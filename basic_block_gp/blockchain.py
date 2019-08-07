@@ -83,8 +83,15 @@ class Blockchain(object):
         Find a number p such that hash(last_block_string, p) contains 6 leading
         zeroes
         """
+        proof = 0
+        # for block 1, hash(1, p) = 000000x
+        # find value for proof that, when hashed with last block string, generates value with 6 leading 0s
+        # guess and check until you find the answer you need
+        while not valid_proof(last_proof, proof):
+            proof+= 1
 
-        pass
+        return proof
+        
 
     @staticmethod
     def valid_proof(last_proof, proof):
@@ -92,8 +99,17 @@ class Blockchain(object):
         Validates the Proof:  Does hash(block_string, proof) contain 6
         leading zeroes?
         """
-        # TODO
-        pass
+        # build string to hash()
+        guess = f'{last_proof}{proof}'.encode()
+        # use hash function
+        guess_hash = hashlib.sha256(guess).hexdigest()
+        # check if there are 6 leading 0s in hash result
+        beg = guess_hash[0:6] #[:6]
+        if beg == "000000":
+            return True
+        else:
+            return False
+
 
     def valid_chain(self, chain):
         """
