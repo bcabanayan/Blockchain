@@ -202,6 +202,28 @@ def full_chain():
     return jsonify(response), 200
 
 
+# def proof_of_work(self, last_proof):
+#     """
+#     Simple Proof of Work Algorithm
+#     Find a number p such that hash(last_block_string, p) contains 6 leading
+#     zeroes
+#     """
+#     proof = 0
+#     # for block 1, hash(1, p) = 000000x
+#     # find value for proof that, when hashed with last block string, generates value with 6 leading 0s
+#     # guess and check until you find the answer you need
+#     while self.valid_proof(last_proof, proof) is False:
+#         proof+= 1
+
+#     return proof
+
+@app.route('/last_proof', methods=['GET'])
+def last_proof():
+    response = {
+        'lastProof': blockchain.chain[-1].proof
+    }
+    return jsonify(response), 200
+
 # Run the program on port 5000
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
