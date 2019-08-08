@@ -88,8 +88,8 @@ class Blockchain(object):
         # use hash function
         guess_hash = hashlib.sha256(guess).hexdigest()
         # check if there are 6 leading 0s in hash result
-        beg = guess_hash[0:6] #[:6]
-        if beg == "000000":
+        beg = guess_hash[0:4] #[:6]
+        if beg == "0000":
             return True
         else:
             return False
@@ -133,29 +133,31 @@ node_identifier = str(uuid4()).replace('-', '')
 blockchain = Blockchain()
 
 
-@app.route('/mine', methods=['GET'])
+@app.route('/mine', methods=['POST'])
 def mine():
     # We run the proof of work algorithm to get the next proof...
-    proof = blockchain.proof_of_work(blockchain.last_block.proof)
+    # proof = blockchain.proof_of_work(blockchain.last_block.proof)
 
     values = request.get_json()
+    print(values)
 
     # We must receive a reward for finding the proof.
     # TODO:
     # The sender is "0" to signify that this node has mine a new coin
     # The recipient is the current node, it did the mining!
     # The amount is 1 coin as a reward for mining the next block
-    blockchain.new_transaction(0, node_identifier, 1)
+    # blockchain.new_transaction(0, node_identifier, 1)
     # Forge the new Block by adding it to the chain
-    block = blockchain.new_block(proof, blockchain.hash(blockchain.last_block))
+    # block = blockchain.new_block(proof, blockchain.hash(blockchain.last_block))
 
     # Send a response with the new block
     response = {
-        'message': "New Block Forged",
-        'index': block['index'],
-        'transactions': block['transactions'],
-        'proof': block['proof'],
-        'previous_hash': block['previous_hash'],
+        'message': 'worked'
+        # 'message': "New Block Forged",
+        # 'index': block['index'],
+        # 'transactions': block['transactions'],
+        # 'proof': block['proof'],
+        # 'previous_hash': block['previous_hash'],
     }
     return jsonify(response), 200
 
