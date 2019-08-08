@@ -75,23 +75,7 @@ class Blockchain(object):
 
     @property
     def last_block(self):
-        return self.chain[-1]
-
-    # def proof_of_work(self, last_proof):
-    #     """
-    #     Simple Proof of Work Algorithm
-    #     Find a number p such that hash(last_block_string, p) contains 6 leading
-    #     zeroes
-    #     """
-    #     proof = 0
-    #     # for block 1, hash(1, p) = 000000x
-    #     # find value for proof that, when hashed with last block string, generates value with 6 leading 0s
-    #     # guess and check until you find the answer you need
-    #     while self.valid_proof(last_proof, proof) is False:
-    #         proof+= 1
-
-    #     return proof
-        
+        return self.chain[-1]       
 
     @staticmethod
     def valid_proof(last_proof, proof):
@@ -152,7 +136,9 @@ blockchain = Blockchain()
 @app.route('/mine', methods=['GET'])
 def mine():
     # We run the proof of work algorithm to get the next proof...
-    proof = blockchain.proof_of_work(blockchain.last_block)
+    proof = blockchain.proof_of_work(blockchain.last_block.proof)
+
+    values = request.get_json()
 
     # We must receive a reward for finding the proof.
     # TODO:
@@ -202,25 +188,10 @@ def full_chain():
     return jsonify(response), 200
 
 
-# def proof_of_work(self, last_proof):
-#     """
-#     Simple Proof of Work Algorithm
-#     Find a number p such that hash(last_block_string, p) contains 6 leading
-#     zeroes
-#     """
-#     proof = 0
-#     # for block 1, hash(1, p) = 000000x
-#     # find value for proof that, when hashed with last block string, generates value with 6 leading 0s
-#     # guess and check until you find the answer you need
-#     while self.valid_proof(last_proof, proof) is False:
-#         proof+= 1
-
-#     return proof
-
 @app.route('/last_proof', methods=['GET'])
 def last_proof():
     response = {
-        'lastProof': blockchain.chain[-1].proof
+        'lastProof': blockchain.last_block.proof
     }
     return jsonify(response), 200
 
