@@ -14,6 +14,12 @@ class Blockchain(object):
         self.current_transactions = []
         self.nodes = set()
 
+        # for communication part of sprint:
+
+        # IF VERY beginning, then, create the genesis block
+
+        # ELSE request chain from other nodes
+
         self.new_block(previous_hash=1, proof=99)
 
     def new_block(self, proof, previous_hash=None):
@@ -78,7 +84,7 @@ class Blockchain(object):
         return self.chain[-1]       
 
     @staticmethod
-    def valid_proof(last_proof, proof):
+    def valid_proof(last_block_string, proof):
         """
         Validates the Proof:  Does hash(block_string, proof) contain 6
         leading zeroes?
@@ -141,23 +147,32 @@ def mine():
     values = request.get_json()
     print(values)
 
+    required = ['proof']
+    if not all(k in values for k in required):
+        return 'Missing Values', 400
+    if not blockchain.valid_proof(blockchain.last_block, values['proof']):
+        print('Error')
+        response = {
+            'message': 'Proof is invalid, may have already been submittied'
+        }
+        return jsonify(response), 200
     # We must receive a reward for finding the proof.
     # TODO:
     # The sender is "0" to signify that this node has mine a new coin
     # The recipient is the current node, it did the mining!
     # The amount is 1 coin as a reward for mining the next block
-    # blockchain.new_transaction(0, node_identifier, 1)
+    blockchain.new_transaction(0, node_identifier, 1)
     # Forge the new Block by adding it to the chain
-    # block = blockchain.new_block(proof, blockchain.hash(blockchain.last_block))
+    block = blockchain.new_block(values['proof'], blockchain.hash(blockchain.last_block))
 
     # Send a response with the new block
     response = {
         'message': 'worked'
-        # 'message': "New Block Forged",
-        # 'index': block['index'],
-        # 'transactions': block['transactions'],
-        # 'proof': block['proof'],
-        # 'previous_hash': block['previous_hash'],
+        'message': "New Block Forged",
+        'index': block['index'],
+        'transactions': block['transactions'],
+        'proof': block['proof'],
+        'previous_hash': block['previous_hash'],
     }
     return jsonify(response), 200
 
@@ -190,10 +205,10 @@ def full_chain():
     return jsonify(response), 200
 
 
-@app.route('/last_proof', methods=['GET'])
-def last_proof():
+@app.route('/last_block_string', methods=['GET'])
+def last_block_string():
     response = {
-        'lastProof': blockchain.last_block.proof
+        'last_block_string': blockchain.last_block
     }
     return jsonify(response), 200
 
