@@ -20,7 +20,7 @@ class Blockchain(object):
 
         # ELSE request chain from other nodes
 
-        self.new_block(previous_hash=1, proof=99)
+        self.new_block(proof=99, previous_hash=1)
 
     def new_block(self, proof, previous_hash=None):
         """
@@ -90,7 +90,7 @@ class Blockchain(object):
         leading zeroes?
         """
         # build string to hash()
-        guess = f'{last_proof}{proof}'.encode()
+        guess = f'{last_block_string}{proof}'.encode()
         # use hash function
         guess_hash = hashlib.sha256(guess).hexdigest()
         # check if there are 6 leading 0s in hash result
@@ -167,7 +167,6 @@ def mine():
 
     # Send a response with the new block
     response = {
-        'message': 'worked'
         'message': "New Block Forged",
         'index': block['index'],
         'transactions': block['transactions'],
