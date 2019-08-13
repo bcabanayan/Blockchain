@@ -150,7 +150,7 @@ def mine():
     required = ['proof']
     if not all(k in values for k in required):
         return 'Missing Values', 400
-    if not blockchain.valid_proof(blockchain.last_block, values['proof']):
+    if not blockchain.valid_proof(blockchain.last_block['previous_hash'], values['proof']):
         print('Error')
         response = {
             'message': 'Proof is invalid, may have already been submittied'

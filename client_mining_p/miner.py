@@ -32,7 +32,6 @@ def valid_proof(last_block_string, proof):
     # use hash function
     guess_hash = hashlib.sha256(guess).hexdigest()
     # check if there are 6 leading 0s in hash result
-    print(guess_hash)
     beg = guess_hash[0:4] #[:6]
     if beg == "0000":
         return True
@@ -55,7 +54,6 @@ if __name__ == '__main__':
         r = requests.get(url = node + '/last_block_string')
         data = r.json()
         last_block_string = data['last_block_string']['previous_hash']
-        print('last block string is ' + str(last_block_string))
         # Look for a new one
         new_proof = proof_of_work(last_block_string)
         

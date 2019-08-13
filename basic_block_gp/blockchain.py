@@ -94,13 +94,13 @@ class Blockchain(object):
         
 
     @staticmethod
-    def valid_proof(last_proof, proof):
+    def valid_proof(last_block_string, proof):
         """
         Validates the Proof:  Does hash(block_string, proof) contain 6
         leading zeroes?
         """
         # build string to hash()
-        guess = f'{last_proof}{proof}'.encode()
+        guess = f'{last_block_string}{proof}'.encode()
         # use hash function
         guess_hash = hashlib.sha256(guess).hexdigest()
         # check if there are 6 leading 0s in hash result
@@ -152,7 +152,7 @@ blockchain = Blockchain()
 @app.route('/mine', methods=['GET'])
 def mine():
     # We run the proof of work algorithm to get the next proof...
-    proof = blockchain.proof_of_work(blockchain.last_block)
+    proof = blockchain.proof_of_work(blockchain.last_block['previous_hash'])
 
     # We must receive a reward for finding the proof.
     # TODO:
