@@ -111,7 +111,19 @@ class Blockchain(object):
             return True
         else:
             return False
+    
+    def register_node(self, address):
+        parsed_url = urlparse(address)
+        self.nodes.add(parsed_url.netloc)
 
+    def broadcast_new_block(self, block):
+        neighbors = self.nodes
+        post_data = {'block': block}
+
+        for node in neighbors:
+            r = request.post(f'http://{node}/block/new', json = post_data)
+            # if response.status_code != 200:
+                # TODO: Error Handlings
 
     def valid_chain(self, chain):
         """
