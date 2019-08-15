@@ -21,6 +21,8 @@ class Blockchain(object):
         # ELSE request chain from other nodes
 
         self.new_block(proof=99, previous_hash=1)
+        if len(self.chain) == 0:
+            self.create_genesis_block()
     
     def create_genesis_block(self):
         block = {
@@ -30,6 +32,7 @@ class Blockchain(object):
             'proof': 5381,
             'previous': 1
         }
+        self.chain.append(block)
 
     def new_block(self, proof, previous_hash=None):
         """
