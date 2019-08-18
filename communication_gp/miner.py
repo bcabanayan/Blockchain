@@ -235,6 +235,16 @@ def last_block_string():
     }
     return jsonify(response), 200
 
+@app.route('/nodes/register', method=['POST'])
+def register_nodes():
+    values = request.get_json()
+    nodes = values['nodes']
+
+    if nodes is None:
+        return "Error, please supply node info", 400
+    for n in nodes:
+        blockchain.register_node(n)
+
 # Run the program on port 5000
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
