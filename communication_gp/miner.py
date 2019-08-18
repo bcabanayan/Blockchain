@@ -169,7 +169,6 @@ def mine():
     # proof = blockchain.proof_of_work(blockchain.last_block.proof)
 
     values = request.get_json()
-    print(values)
 
     required = ['proof']
     if not all(k in values for k in required):
@@ -188,6 +187,7 @@ def mine():
     blockchain.new_transaction(0, node_identifier, 1)
     # Forge the new Block by adding it to the chain
     block = blockchain.new_block(values['proof'], blockchain.hash(blockchain.last_block))
+    blockchain.broadcast_new_block(block)
 
     # Send a response with the new block
     response = {
